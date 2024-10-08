@@ -11,4 +11,12 @@ export class UserController {
 
     }
 
+    async signIn(req: Request, res: Response) {
+
+        const userServiceResponse = await new UserService().signIn(req.body);
+
+        res.json(userServiceResponse);
+
+    }
+
 }
