@@ -12,7 +12,7 @@ describe("User test integration", () => {
         }
 
         const res = await request(app)
-        .post('signUp')
+        .post('/signUp')
         .send(data)
 
         expect(res.body).toEqual("account created")
