@@ -19,6 +19,16 @@ describe("User test integration", () => {
     })
 
     it("Should test router '/signIn' and return the JWT", async() => {
+
+        const dataUser = {
+            name: "jonh",
+            email: "jonh@test",
+            password: "12345678"
+        }
+
+        await request(app)
+        .post('/signUp')
+        .send(dataUser)
         
         const data = {
             email: "jonh@test",
