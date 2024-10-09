@@ -25,7 +25,7 @@ describe("ReceiveMoney test integration", () => {
         .set('Authorization', `Bearer ${token}`)
         .send(data)
 
-        expect(res).toBe(true)
+        expect(res.body).toBe(true)
     });
 
     it("Should test router get:/current return proprietary balance", async() => {

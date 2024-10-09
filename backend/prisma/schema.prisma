@@ -41,7 +41,7 @@ model Income {
   id String @id @default(uuid())
   amount Decimal
   description String?
-  date DateTime
+  date DateTime @default(now())
 
   user User? @relation(fields: [user_id], references: [id])
   user_id String?
@@ -52,7 +52,7 @@ model Expense {
   id String @id @default(uuid())
   amount Decimal
   description String?
-  date DateTime
+  date DateTime @default(now())
 
   user User? @relation(fields: [user_id], references: [id])
   user_id String?
