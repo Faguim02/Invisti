@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { verify } from "jsonwebtoken";
 
-async function isAuthentication(req: any, res: Response, next: NextFunction) {
+export async function isAuthentication(req: any, res: Response, next: NextFunction) {
 
 
     
