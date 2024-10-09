@@ -7,4 +7,11 @@ export class ReceiveMoneyController {
 
         res.json(firstMoneyRes);
     }
+
+    async findAllMoney(req: Request | any, res: Response) {
+
+        const moneyRes = await new ReceiveMoneyService().findAllMoney(req.user_id);
+
+        res.json(moneyRes);
+    }
 }

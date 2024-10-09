@@ -23,5 +23,23 @@ export class ReceiveMoneyService {
         }
     }
 
-    
+    async findAllMoney(user_id: string) {
+        try {
+            
+            if(!user_id!) {
+                throw new Error('not authorized');
+            }
+
+            const money = await prisma.receiveMoney.findFirst({
+                where: {
+                    user_id
+                }
+            });
+
+            return money;
+
+        } catch (error) {
+            return error+""
+        }
+    }
 }
