@@ -14,7 +14,7 @@ export type UserDto = {
   export type ReceiveMoney = {
     id?: string,
     balance: number | string
-    last_updated?: string
+    date?: string
     user_id?: string
   }
   

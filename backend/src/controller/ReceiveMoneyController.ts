@@ -14,4 +14,13 @@ export class ReceiveMoneyController {
 
         res.json(moneyRes);
     }
+
+    async findMoneyForMonth(req: Request | any, res: Response) {
+
+        const { month, year } = req.params;
+
+        const moneyRes = await new ReceiveMoneyService().findMoneyForMonth(req.user_id, month, year);
+
+        res.json(moneyRes);
+    }
 }

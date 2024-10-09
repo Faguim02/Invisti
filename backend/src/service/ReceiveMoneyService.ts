@@ -42,4 +42,30 @@ export class ReceiveMoneyService {
             return error+""
         }
     }
+
+    async findMoneyForMonth(user_id: string, month: string, year: string) {
+        try {
+            
+            if(!user_id || !month) {
+                throw new Error('not Authorized');
+            }
+
+            const startDate = new Date(`${year}-${month}-01`);
+            const endDate = new Date(`${year}-${month}-30`);
+
+            const money = await prisma.receiveMoney.findMany({
+                where: {
+                    date: {
+                        gte: startDate,
+                        lte: endDate
+                    }
+                }
+            })
+
+            return money;
+
+        } catch (error) {
+            return error+""
+        }
+    }
 }
