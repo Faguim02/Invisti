@@ -31,4 +31,51 @@ export class IncomeService {
             return error+""
         }
     }
+
+    async findAllIncome(user_id: string) {
+        try {
+            
+            if(!user_id) {
+                throw new Error('unauthorized');
+            }
+
+            const amounts = await prisma.income.findMany({
+                where: {
+                    user_id
+                }
+            });
+
+            return amounts;
+
+        } catch (error) {
+            return error+""
+        }
+    }
+
+    async findIncomeForMonth(user_id: string, month: string, year: string) {
+        try {
+            
+            if(!user_id) {
+                throw new Error('unauthorized');
+            }
+
+            const startDate = new Date(`${year}-${month}-01`);
+            const endDate = new Date(`${year}-${month}-30`);
+
+            const money = await prisma.income.findMany({
+                where: {
+                    date: {
+                        gte: startDate,
+                        lte: endDate
+                    },
+                    user_id
+                }
+            })
+
+            return money;
+            
+        } catch (error) {
+            return error+''
+        }
+    }
 }

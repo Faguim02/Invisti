@@ -14,3 +14,5 @@ router.get('/current', isAuthentication, new ReceiveMoneyController().findAllMon
 router.get('/current/:month/:year', isAuthentication, new ReceiveMoneyController().findMoneyForMonth)
 
 router.post('/income', isAuthentication, new incomeController().incomeMoney);
+router.get('/income', isAuthentication, new incomeController().findAllIncome);
+router.get('/income/:month/:year', isAuthentication, new incomeController().findIncomeForMonth);

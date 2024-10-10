@@ -58,7 +58,8 @@ export class ReceiveMoneyService {
                     date: {
                         gte: startDate,
                         lte: endDate
-                    }
+                    },
+                    user_id
                 }
             })
 

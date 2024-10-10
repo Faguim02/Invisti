@@ -7,4 +7,18 @@ export class incomeController {
 
         res.json(incomeRes);
     }
+
+    async findAllIncome(req: Request | any, res: Response) {
+        const incomeRes = await new IncomeService().findAllIncome(req.user_id);
+
+        res.json(incomeRes);
+    }
+
+    async findIncomeForMonth(req: Request | any, res: Response) {
+
+        const { month, year } = req.params;
+
+        const incomeRes = await new IncomeService().findIncomeForMonth(req.user_id, month, year);
+
+    }
 }
