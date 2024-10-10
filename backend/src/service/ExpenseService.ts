@@ -13,11 +13,11 @@ export class ExpenseService {
             
             await prisma.expense.create({data});
 
-            const receive = await prisma.receiveMoney.findFirst({where: {user_id}});
+            const receive = await prisma.receiveMoney.findMany({where: {user_id}});
 
             await prisma.receiveMoney.create({
                 data: {
-                    balance: Number(receive?.balance) - Number(data.amount),
+                    balance: Number(receive[receive.length -1]?.balance) - Number(data.amount),
                     user_id
                 }
             })
