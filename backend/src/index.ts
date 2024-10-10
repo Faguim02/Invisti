@@ -8,4 +8,4 @@ server.use(express.json());
 server.use(cors());
 server.use(router);
 
-server.listen(8080, ()=> console.log('- Server actved'));
+server.listen(8080, ()=> console.log('🟢 Server actved'));
