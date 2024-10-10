@@ -24,7 +24,7 @@ describe("Income test integration", () => {
         .set('Authorization', `Bearer ${token}`)
         .send(data)
 
-        expect(res).toEqual('received success!')
+        expect(res).toEqual('expense success!')
     })
 
     it("Should test router get:expense return 'amount'", async() => {
