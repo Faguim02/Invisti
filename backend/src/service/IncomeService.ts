@@ -13,13 +13,13 @@ export class IncomeService {
 
             await prisma.income.create({data});
 
-            const startMoney = await prisma.receiveMoney.findFirst({
+            const startMoney = await prisma.receiveMoney.findMany({
                 where: {
                     user_id
                 }
             });
 
-            const newBalance = Number(data.amount) + Number(startMoney?.balance);
+            const newBalance = Number(data.amount) + Number(startMoney[startMoney.length - 1]?.balance);
 
             await prisma.receiveMoney.create({
                 data: {
