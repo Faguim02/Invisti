@@ -9,6 +9,8 @@ export class IncomeService {
                 throw new Error('not authorized');
             }
 
+            data.user_id =  user_id
+
             await prisma.income.create({data});
 
             const startMoney = await prisma.receiveMoney.findFirst({
@@ -21,7 +23,8 @@ export class IncomeService {
 
             await prisma.receiveMoney.create({
                 data: {
-                    balance: newBalance
+                    balance: newBalance,
+                    user_id
                 }
             });
 
