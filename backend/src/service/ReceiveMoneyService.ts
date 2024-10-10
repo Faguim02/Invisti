@@ -30,13 +30,13 @@ export class ReceiveMoneyService {
                 throw new Error('not authorized');
             }
 
-            const money = await prisma.receiveMoney.findFirst({
+            const money = await prisma.receiveMoney.findMany({
                 where: {
                     user_id
                 }
             });
 
-            return money;
+            return money[money.length -1];
 
         } catch (error) {
             return error+""
