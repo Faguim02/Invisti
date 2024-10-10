@@ -20,5 +20,7 @@ export class incomeController {
 
         const incomeRes = await new IncomeService().findIncomeForMonth(req.user_id, month, year);
 
+        res.json(incomeRes);
+
     }
 }
