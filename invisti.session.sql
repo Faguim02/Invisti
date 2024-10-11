@@ -1,0 +1,1 @@
+delete from receive_money where id = 'ba9e4c73-0402-48ba-9101-36ae6ca05c3e';
