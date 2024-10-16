@@ -1,28 +1,36 @@
 import { api } from "../axios/Api";
 import { UserDto } from "../data/Dtos";
-import StatusCode from "./StatusCode/StatusCode";
 import Cookies from "cookies-ts";
 
 export class UserService {
 
     private cookies = new Cookies()
     
-    async signUp(data: UserDto) {
+    async signUp(data: UserDto): Promise<{message: any, success: boolean}> {
         try {
             
             const response  = await api.post('/signUp', data);
 
-            const statusCode = StatusCode(response.status, "Usuario")
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
+            if(response.data !== "account created") {
+                return {
+                    message: response.data,
+                    success: false
+                }
             }
 
-            return response.data
+            return {
+                message: response.data,
+                success: true
+            }
 
         } catch (error) {
             
-            return error;
+            console.log(error)
+            
+            return {
+                message: error+'',
+                success: false
+            };
 
         }
     }
@@ -42,7 +50,7 @@ export class UserService {
 
             return {
                 message: response.data,
-                success: false
+                success: true
             };
 
         } catch (error) {
