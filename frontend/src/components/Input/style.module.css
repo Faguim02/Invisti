@@ -1,0 +1,34 @@
+.input {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    
+    border: 2px solid #979797;
+    color: #CACACA;
+    background-color: #2B2B2B;
+    font-family: "Kodchasan", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    transition: 0.2s;
+}
+.input::placeholder {
+    color: #979797;
+}
+
+.input:focus {
+    border: 2px solid #CACACA;
+    outline: 3px solid #979797;
+}
+.input:hover {
+    border: 2px solid #8332AC;
+}
+
+.inputLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: baseline;
+    color: #CACACA;
+    font-family: "Kodchasan", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+}
