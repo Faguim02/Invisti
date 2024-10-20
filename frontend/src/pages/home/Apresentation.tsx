@@ -2,14 +2,18 @@ import Button from '../../components/button/Button'
 import people from '../../assets/people.jpg'
 import cell from '../../assets/cell.svg'
 import style from './style.module.css'
+import { useNavigate } from 'react-router-dom'
 
 export default function Apresentation() {
+
+    const navigate = useNavigate()
+
     return (
         <>
             <figure className={style.bgApresentation}>
                 <section>
                     <h2>Saiba para onde seu dinheiro está correndo</h2>
-                    <Button>Criar uma conta</Button>
+                    <Button onClick={()=>navigate('/signUp')}>Criar uma conta</Button>
                 </section>
             </figure>
 
