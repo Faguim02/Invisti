@@ -23,6 +23,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.27.0",
     "ts-cookies": "^1.0.0"
   },
@@ -31,6 +32,7 @@
     "@types/axios": "^0.9.36",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
+    "@types/react-query": "^1.2.8",
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "eslint": "^9.11.1",
