@@ -1,7 +1,6 @@
 import Cookies from "ts-cookies";
 import { Expense } from "../data/Dtos";
 import { api } from "../axios/Api";
-import StatusCode from "./StatusCode/StatusCode";
 
 export class ExpenseService {
     async expenseMoney(data: Expense) {
@@ -18,12 +17,6 @@ export class ExpenseService {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
 
             return response.data;
 
@@ -47,12 +40,6 @@ export class ExpenseService {
                 }
             })
 
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
-
             return response.data;
 
         } catch (error) {
@@ -75,11 +62,6 @@ export class ExpenseService {
                 }
             })
 
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
 
             return response.data;
 
