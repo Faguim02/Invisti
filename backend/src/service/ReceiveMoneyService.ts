@@ -36,6 +36,13 @@ export class ReceiveMoneyService {
                 }
             });
 
+            if(money.length == 0) {
+                return {
+                    balance: 0,
+                    id: user_id
+                }
+            }
+
             return money[money.length -1];
 
         } catch (error) {

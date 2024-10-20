@@ -36,7 +36,14 @@ export class ExpenseService {
                 throw new Error('unautorized!');
             }
 
-            return await prisma.expense.findMany({where: {user_id}});
+            const amounts = await prisma.expense.findMany({where: {user_id}});
+
+            if(amounts.length == 0) {
+                return {
+                    amount: 0,
+                    id: user_id
+                }
+            }
 
         } catch (error) {
             return error+""

@@ -48,6 +48,13 @@ export class IncomeService {
                 }
             });
 
+            if(amounts.length == 0) {
+                return {
+                    amount: 0,
+                    id: user_id
+                }
+            }
+
             return amounts;
 
         } catch (error) {
