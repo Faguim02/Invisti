@@ -6,6 +6,18 @@ import Apresentation from "./Apresentation";
 import { useState } from "react";
 import Button from "../../components/button/Button";
 import { DateSelectService } from "../../service/DateSelectService";
+import Cookies from "ts-cookies";
+import { ReceiveMoneyService } from "../../service/ReceiveMoneyService";
+import { useQuery } from "react-query";
+import { Expense, Income, ReceiveMoney } from "../../data/Dtos";
+import { IncomeService } from "../../service/IncomeService";
+import { ExpenseService } from "../../service/ExpenseService";
+
+interface dataInitial {
+    receive: ReceiveMoney,
+    income: Income,
+    expense: Expense
+}
 
 export default function Home() {
 
@@ -18,6 +30,11 @@ export default function Home() {
 
     const [buttonFloatActive, setButtonFloatActive] = useState<boolean>(false)
 
+    const { data } = useQuery({
+        queryKey: ['money'],
+        queryFn: LoadInfoInitial
+    })
+
     function handleNextDate() {
         const dateNext = new DateSelectService().nextMonth(month, year)
         setMonth(dateNext.month)
@@ -28,6 +45,28 @@ export default function Home() {
         const dateNext = new DateSelectService().backMonth(month, year)
         setMonth(dateNext.month)
         setYear(dateNext.year)
+        console.log(data)
+    }
+
+    async function LoadInfoInitial(): Promise<dataInitial> {
+        const findAllMoney = await new ReceiveMoneyService().findAllMoney();
+        const findAllIncome = await new IncomeService().findAllIncome();
+        const findAllExpense = await new ExpenseService().findAllExpense();
+        
+        return {
+            expense: findAllExpense as Expense,
+            income: findAllIncome as Income,
+            receive: findAllMoney as ReceiveMoney
+        }
+    }
+
+    if(!Cookies.get('access_token')) {
+        return (
+            <div className={style.home}>
+                <HeaderComponent/>
+                <Apresentation/>
+            </div>
+        )
     }
 
     return (
@@ -46,11 +85,10 @@ export default function Home() {
             </div>
 
             <HeaderComponent/>
-            {/* //<Apresentation/> */}
 
             <section className={style.receiveContainer}>
                 <span>Valor atual</span>
-                <h3>R$ {receive.toFixed(2)}</h3>
+                <h3>R$ {Number(data?.receive.balance).toFixed(2)}</h3>
                 <div className={style.divider}></div>
             </section>
             <article className={style.statusGroup}>
@@ -58,14 +96,14 @@ export default function Home() {
                     <FaArrowUp color="#29BF12" size={40}/>
                     <div>
                         <span>receita do mês</span>
-                        <h4>R$ {income.toFixed(2)}</h4>
+                        <h4>R$ {Number(data?.income.amount).toFixed(2)}</h4>
                     </div>
                 </section>
                 <section className={style.statusContainer}>
                     <FaArrowDown color="#F21B3F" size={40}/>
                     <div>
                         <span>receita do mês</span>
-                        <h4>R$ {expense.toFixed(2)}</h4>
+                        <h4>R$ {Number(data?.expense.amount).toFixed(2)}</h4>
                     </div>
                 </section>
             </article>
