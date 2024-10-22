@@ -19,6 +19,17 @@ export class IncomeService {
                 }
             });
 
+            if(startMoney.length == 0) {
+                await prisma.receiveMoney.create({
+                    data: {
+                        balance: Number(data.amount),
+                        user_id
+                    }
+                })
+
+                return "received success!"
+            }
+
             const newBalance = Number(data.amount) + Number(startMoney[startMoney.length - 1]?.balance);
 
             await prisma.receiveMoney.create({
@@ -42,8 +53,18 @@ export class IncomeService {
                 throw new Error('unauthorized');
             }
 
+            const year = new Date().getFullYear()
+            const month = new Date().getMonth() + 1
+
+            const startDate = new Date(`${year}-${month}-01`);
+            const endDate = new Date(`${year}-${month}-30`);
+
             const amounts = await prisma.income.findMany({
                 where: {
+                    date: {
+                        gte: startDate,
+                        lte: endDate
+                    },
                     user_id
                 }
             });
@@ -55,7 +76,12 @@ export class IncomeService {
                 }
             }
 
-            return amounts;
+            const amountFull = amounts.reduce((full, item)=> full + Number(item.amount), 0)
+
+            return {
+                id: user_id,
+                amount: amountFull
+            };
 
         } catch (error) {
             return error+""

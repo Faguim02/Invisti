@@ -15,6 +15,17 @@ export class ExpenseService {
 
             const receive = await prisma.receiveMoney.findMany({where: {user_id}});
 
+            if(receive.length == 0) {
+                await prisma.receiveMoney.create({
+                    data: {
+                        balance: Number(data.amount),
+                        user_id
+                    }
+                })
+
+                return "expense success!";
+            }
+
             await prisma.receiveMoney.create({
                 data: {
                     balance: Number(receive[receive.length -1]?.balance) - Number(data.amount),
@@ -36,7 +47,21 @@ export class ExpenseService {
                 throw new Error('unautorized!');
             }
 
-            const amounts = await prisma.expense.findMany({where: {user_id}});
+            const year = new Date().getFullYear()
+            const month = new Date().getMonth() + 1
+
+            const startDate = new Date(`${year}-${month}-01`);
+            const endDate = new Date(`${year}-${month}-30`);
+
+            const amounts = await prisma.expense.findMany({
+                where: {
+                    user_id,
+                    date: {
+                        gte: startDate,
+                        lte: endDate
+                    },
+                }
+            });
 
             if(amounts.length == 0) {
                 return {
@@ -44,6 +69,13 @@ export class ExpenseService {
                     id: user_id
                 }
             }
+
+            const amountFull = amounts.reduce((full, item)=> full + Number(item.amount), 0)
+
+            return {
+                id: user_id,
+                amount: amountFull
+            };
 
         } catch (error) {
             return error+""
