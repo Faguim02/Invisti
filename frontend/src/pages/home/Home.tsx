@@ -12,6 +12,8 @@ import { useQuery } from "react-query";
 import { Expense, Income, ReceiveMoney } from "../../data/Dtos";
 import { IncomeService } from "../../service/IncomeService";
 import { ExpenseService } from "../../service/ExpenseService";
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, useDisclosure } from "@chakra-ui/react";
+import InputLabel from "../../components/Input/InputLabel";
 
 interface dataInitial {
     receive: ReceiveMoney,
@@ -21,24 +23,36 @@ interface dataInitial {
 
 export default function Home() {
 
-    const [receive, setReceive] = useState<number>(100.1);
-    const [income, setIncome] = useState<number>(50.2);
-    const [expense, setExpense] = useState<number>(15.3);
+    const [receiveMonth, setReceiveMonth] = useState<ReceiveMoney[]>([]);
+    const [incomeMonth, setIncomeMonth] = useState<Income[]>([]);
+    const [expenseMonth, setExpenseMonth] = useState<Expense[]>([]);
+    const [selectTypeMonth, setSelectTypeMonth] = useState<string>("income")
+
+    const [amount, setAmount] = useState<number>(0);
+    const [describe, setDescribe] = useState<string>("");
     
     const [month, setMonth] = useState<string>("jan");
     const [year, setYear] = useState<number>(2024);
 
     const [buttonFloatActive, setButtonFloatActive] = useState<boolean>(false)
 
+    const [modayType, setModalType] = useState<string>("Receita")
+    const { isOpen, onClose, onOpen } = useDisclosure()
+
     const { data } = useQuery({
         queryKey: ['money'],
         queryFn: LoadInfoInitial
     })
 
-    function handleNextDate() {
+    async function handleNextDate() {
         const dateNext = new DateSelectService().nextMonth(month, year)
         setMonth(dateNext.month)
         setYear(dateNext.year)
+
+        if(selectTypeMonth == "income") {
+            const res = await new IncomeService().findIncomeForMonth("0", "0") as Income[]
+            setIncomeMonth(res)
+        }
     }
 
     function handleBackDate() {
@@ -60,6 +74,31 @@ export default function Home() {
         }
     }
 
+    async function generateNewCurrent(e: any) {
+        e.preventDefault()
+        
+        if(modayType == "Receita") {
+            const incomeData = {
+                amount: amount,
+                description: describe
+            } as Income
+
+            const incoemeRes = await new IncomeService().incomeMoney(incomeData)
+
+            console.log(incoemeRes);
+            return            
+        }
+
+        const expenseData = {
+            amount: amount,
+            description: describe
+        } as Expense
+
+        const expenseRes = await new ExpenseService().expenseMoney(expenseData)
+
+        console.log(expenseRes)
+    }
+
     if(!Cookies.get('access_token')) {
         return (
             <div className={style.home}>
@@ -75,14 +114,37 @@ export default function Home() {
             <div className={style.buttonFloat}>
                 {buttonFloatActive && (
                     <>
-                        <Button style={{backgroundColor: '#f3f3f3'}}><FaArrowUp size={30} color="#29BF12"/></Button>
-                        <Button style={{backgroundColor: '#f3f3f3'}}><FaArrowDown size={30} color="#F21B3F"/></Button>
+                        <Button style={{backgroundColor: '#f3f3f3'}} onClick={()=>{
+                            onOpen()
+                            setModalType("Receita")
+                        }}><FaArrowUp size={30} color="#29BF12"/></Button>
+                        <Button style={{backgroundColor: '#f3f3f3'}} onClick={()=>{
+                            onOpen()
+                            setModalType("Despesa")
+                        }}><FaArrowDown size={30} color="#F21B3F"/></Button>
                     </>
                 )}
                 <Button onClick={()=>setButtonFloatActive(!buttonFloatActive)}>
                     {buttonFloatActive ? (<MdOutlineClear size={30}/>):(<MdAdd size={30}/>)}
                 </Button>
             </div>
+
+            <Modal isOpen={isOpen} onClose={onClose} size={'full'}>
+                <ModalContent>
+                    <ModalCloseButton/>
+                    <ModalHeader>
+                        Nova {modayType}
+                    </ModalHeader>
+                    <ModalBody>
+
+                        <form className={style.formModalHome} onSubmit={generateNewCurrent}>
+                            <InputLabel labeText="Valor" onChange={(e)=>setAmount(e.target.value)} value={amount?.toString()} pleaceholder="10.50"/>
+                            <InputLabel labeText="Com o que?" onChange={(e)=>setDescribe(e.target.value)} value={describe} pleaceholder="diga aqui"/>
+                            <Button>Gerar {modayType}</Button>
+                        </form>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
 
             <HeaderComponent/>
 
@@ -102,7 +164,7 @@ export default function Home() {
                 <section className={style.statusContainer}>
                     <FaArrowDown color="#F21B3F" size={40}/>
                     <div>
-                        <span>receita do mês</span>
+                        <span>despesa do mês</span>
                         <h4>R$ {Number(data?.expense.amount).toFixed(2)}</h4>
                     </div>
                 </section>
@@ -125,7 +187,7 @@ export default function Home() {
                     <h4>receitas</h4>
                     <div>
                         <span>Total:</span>
-                        <h4>R$ {income.toFixed(2)}</h4>
+                        <h4>R$ 10</h4>
                     </div>
                 </section>
 
