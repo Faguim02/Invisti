@@ -47,7 +47,7 @@ export class ExpenseService {
         }
     }
 
-    async findExpenseForMonth(month: string, year: string) {
+    async findExpenseForMonth(month: number, year: number) {
         try {
             
             const access_token = Cookies.get('access_token');

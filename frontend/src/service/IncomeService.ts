@@ -47,7 +47,7 @@ export class IncomeService {
         }
     }
 
-    async findIncomeForMonth(month: string, year: string) {
+    async findIncomeForMonth(month: number, year: number) {
         try {
             
             const access_token = Cookies.get('access_token');

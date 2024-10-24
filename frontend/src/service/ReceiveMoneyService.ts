@@ -47,7 +47,7 @@ export class ReceiveMoneyService {
 
     }
 
-    async findMoneyForMonth(month: string, year: string) {
+    async findMoneyForMonth(month: number, year: number) {
         try {
             
             const access_token = Cookies.get('access_token');
