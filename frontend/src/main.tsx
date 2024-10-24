@@ -2,9 +2,16 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import { ChakraProvider } from '@chakra-ui/react'
+import { QueryClientProvider } from 'react-query'
+import { queryClient } from './service/react-query/QueryClient.ts'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider>        
+        <App />
+      </ChakraProvider>
+    </QueryClientProvider>
   </StrictMode>,
 )

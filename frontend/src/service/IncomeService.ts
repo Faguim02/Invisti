@@ -1,7 +1,6 @@
 import Cookies from "ts-cookies";
 import { Income } from "../data/Dtos";
 import { api } from "../axios/Api";
-import StatusCode from "./StatusCode/StatusCode";
 
 export class IncomeService {
     async incomeMoney(data: Income) {
@@ -18,12 +17,6 @@ export class IncomeService {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
 
             return response.data;
 
@@ -47,12 +40,6 @@ export class IncomeService {
                 }
             })
 
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
-
             return response.data;
 
         } catch (error) {
@@ -60,7 +47,7 @@ export class IncomeService {
         }
     }
 
-    async findIncomeForMonth(month: string, year: string) {
+    async findIncomeForMonth(month: number, year: number) {
         try {
             
             const access_token = Cookies.get('access_token');
@@ -74,12 +61,6 @@ export class IncomeService {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
 
             return response.data;
 

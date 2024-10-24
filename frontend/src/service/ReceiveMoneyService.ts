@@ -1,7 +1,6 @@
 import Cookies from "ts-cookies";
 import { api } from "../axios/Api";
 import { ReceiveMoney } from "../data/Dtos";
-import StatusCode from "./StatusCode/StatusCode";
 
 export class ReceiveMoneyService {
     async insertFirstMoney(data: ReceiveMoney) {
@@ -18,12 +17,6 @@ export class ReceiveMoneyService {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
 
             return response.data;
 
@@ -47,12 +40,6 @@ export class ReceiveMoneyService {
                 }
             })
 
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
-
             return response.data;
         } catch (error) {
             return error;
@@ -60,7 +47,7 @@ export class ReceiveMoneyService {
 
     }
 
-    async findMoneyForMonth(month: string, year: string) {
+    async findMoneyForMonth(month: number, year: number) {
         try {
             
             const access_token = Cookies.get('access_token');
@@ -74,12 +61,6 @@ export class ReceiveMoneyService {
                     Authorization: `Bearer ${access_token}`
                 }
             })
-
-            const statusCode = StatusCode(response.status, "Receita");
-
-            if(statusCode.status != "success") {
-                throw new Error(statusCode.message)
-            }
 
             return response.data;
 
