@@ -14,6 +14,7 @@ import { IncomeService } from "../../service/IncomeService";
 import { ExpenseService } from "../../service/ExpenseService";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, useDisclosure } from "@chakra-ui/react";
 import InputLabel from "../../components/Input/InputLabel";
+import Card from "./Card";
 
 interface dataInitial {
     receive: ReceiveMoney,
@@ -23,10 +24,8 @@ interface dataInitial {
 
 export default function Home() {
 
-    const [receiveMonth, setReceiveMonth] = useState<ReceiveMoney[]>([]);
-    const [incomeMonth, setIncomeMonth] = useState<Income[]>([]);
-    const [expenseMonth, setExpenseMonth] = useState<Expense[]>([]);
-    const [selectTypeMonth, setSelectTypeMonth] = useState<string>("income")
+    const [listHistoryForMonth, setListHistoryForMonth] = useState<Array<Expense | Income>>([])
+    const [selectTypeMonth, setSelectTypeMonth] = useState<string>("ganhos")
 
     const [amount, setAmount] = useState<number>(0);
     const [describe, setDescribe] = useState<string>("");
@@ -46,20 +45,63 @@ export default function Home() {
 
     async function handleNextDate() {
         const dateNext = new DateSelectService().nextMonth(month, year)
+        const monthNumber = new DateSelectService().covertMonthTextInNumber(month)
+        if(!(new DateSelectService().isDateSelectedExist(monthNumber, dateNext.year))) {
+            return
+        }
         setMonth(dateNext.month)
         setYear(dateNext.year)
 
-        if(selectTypeMonth == "income") {
-            const res = await new IncomeService().findIncomeForMonth("0", "0") as Income[]
-            setIncomeMonth(res)
+        let listHistory = [];
+
+        if(selectTypeMonth == "ganhos") {
+            listHistory = await new IncomeService().findIncomeForMonth(monthNumber, year) as Income[]
+        } else if(selectTypeMonth == "despesas") {
+            listHistory = await new ExpenseService().findExpenseForMonth(monthNumber, year) as Expense[]
+        } else {
+            const res = await new ReceiveMoneyService().findMoneyForMonth(monthNumber, year) as ReceiveMoney[]
+            for(let i = 0; i <= res.length; i++) {
+                const newObject = {
+                    amount: res[i].balance,
+                    date: res[i].date,
+                    description: "alteração",
+                    id: res[i].id,
+                    user_id: res[i].user_id
+                } as Income
+                listHistory.push(newObject)
+            }
         }
+        
+        setListHistoryForMonth(listHistory);
     }
 
-    function handleBackDate() {
+    async function handleBackDate() {
         const dateNext = new DateSelectService().backMonth(month, year)
         setMonth(dateNext.month)
         setYear(dateNext.year)
-        console.log(data)
+
+        const monthNumber = new DateSelectService().covertMonthTextInNumber(month)
+        let listHistory = [];
+
+        if(selectTypeMonth == "ganhos") {
+            listHistory = await new IncomeService().findIncomeForMonth(monthNumber, year) as Income[]
+        } else if(selectTypeMonth == "despesas") {
+            listHistory = await new ExpenseService().findExpenseForMonth(monthNumber, year) as Expense[]
+        } else {
+            const res = await new ReceiveMoneyService().findMoneyForMonth(monthNumber, year) as ReceiveMoney[]
+            for(let i = 0; i <= res.length; i++) {
+                const newObject = {
+                    amount: res[i].balance,
+                    date: res[i].date,
+                    description: "alteração",
+                    id: res[i].id,
+                    user_id: res[i].user_id
+                } as Income
+                listHistory.push(newObject)
+            }
+        }
+
+        setListHistoryForMonth(listHistory);
     }
 
     async function LoadInfoInitial(): Promise<dataInitial> {
@@ -178,13 +220,13 @@ export default function Home() {
                 </section>
 
                 <section className={style.menuOptionsSection}>
-                    <button>receitas</button>
-                    <button>despesas</button>
-                    <button>em mão</button>
+                    <button onClick={()=>setSelectTypeMonth("ganhos")}>receitas</button>
+                    <button onClick={()=>setSelectTypeMonth("despesas")}>despesas</button>
+                    <button onClick={()=>setSelectTypeMonth("em mãos")}>em mão</button>
                 </section>
 
                 <section className={style.headerHistory}>
-                    <h4>receitas</h4>
+                    <h4>{selectTypeMonth}</h4>
                     <div>
                         <span>Total:</span>
                         <h4>R$ 10</h4>
@@ -192,45 +234,9 @@ export default function Home() {
                 </section>
 
                 <ul className={style.listHistory}>
-                    <li>
-                        <div className={style.icon}>
-                            <FaArrowUp color="#29BF12" size={20}/>
-                            <div>
-                                <span className={style.description}>triguinho</span>
-                                <span className={style.value}>R$ 50,00</span>
-                            </div>
-                        </div>
-                        <data className={style.date}>
-                            20 jan 2024
-                        </data>
-                    </li>
-
-                    <li>
-                        <div className={style.icon}>
-                            <FaArrowUp color="#29BF12" size={20}/>
-                            <div>
-                                <span className={style.description}>triguinho</span>
-                                <span className={style.value}>R$ 50,00</span>
-                            </div>
-                        </div>
-                        <data className={style.date}>
-                            20 jan 2024
-                        </data>
-                    </li>
-
-                    <li>
-                        <div className={style.icon}>
-                            <FaArrowUp color="#29BF12" size={20}/>
-                            <div>
-                                <span className={style.description}>triguinho</span>
-                                <span className={style.value}>R$ 50,00</span>
-                            </div>
-                        </div>
-                        <data className={style.date}>
-                            20 jan 2024
-                        </data>
-                    </li>
-
+                    {
+                        listHistoryForMonth.map(item => <Card amount={Number(item.amount)} date="20 jan 2024" description="test" type={selectTypeMonth}/>)
+                    }
                 </ul>
             </article>
             
