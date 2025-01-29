@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+
+  invisti-api:
+      image: invisti-api-node
+      ports:
+        - "8080:8080"
+      depends_on:
+        - invisti-db
+    
+  invisti-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "BncdD123"
+      POSTGRES_DB: invisti
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/postgres-data:/var/lib/postgresql/data
