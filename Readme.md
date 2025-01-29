@@ -31,6 +31,11 @@ Caso tenho vontande em contribuir com o projeto,
 - Axios
 - Cookies-ts
 
+## Diagrama de caso de casi de uso
+
+<img src="./diagrams/usecase.svg"/>
+
+
 ## Diagrama de classe
 
 ```mermaid
