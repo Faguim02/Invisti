@@ -6,9 +6,9 @@ const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Nome da sua API',
+      title: 'Invisti API',
       version: '1.0.0',
-      description: 'Descrição da sua API',
+      description: 'Api de controle de finanças',
     },
     servers: [
       {
@@ -25,9 +25,22 @@ const options: swaggerJsdoc.Options = {
         },
       },
       schemas: {
-        HelloWord: {
-          type: "object",
-          properties: "Hello word"
+        User: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1,
+            },
+            name: {
+              type: 'string',
+              example: 'John Doe',
+            },
+            email: {
+              type: 'string',
+              example: 'john.doe@example.com',
+            },
+          },
         }
       }
     },
@@ -37,7 +50,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/routes/*.ts'], // Caminho para os arquivos de rotas
+  apis: ['./src/router.ts'], // Caminho para os arquivos de rotas
 };
 
 const swaggerSpec = swaggerJsdoc(options);
