@@ -161,8 +161,83 @@ router.get('/current', isAuthentication, new ReceiveMoneyController().findAllMon
  */
 router.get('/current/:month/:year', isAuthentication, new ReceiveMoneyController().findMoneyForMonth)
 
+/**
+ * @swagger
+ * /income:
+ *   post:
+ *     tags:
+ *      - Ganhos
+ *     summary: Insere uma nova receita.
+ *     description: Insere uma nova receita com os dados fornecidos.
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: object
+ *         properties:
+ *          amount:
+ *           type: number
+ *           example: 1000
+ *           description: Valor da receita.
+ *          description:
+ *           type: string
+ *           example: Salario
+ *           description: Descrição da receita.
+ *     responses:
+ *      200:
+ *       description: Receita inserida com sucesso.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: string
+ *          example: received success!
+ */
 router.post('/income', isAuthentication, new incomeController().incomeMoney);
+
+/**
+ * @swagger
+ * /income:
+ *   get:
+ *     tags:
+ *      - Ganhos
+ *     summary: Recebe todas as receitas.
+ *     description: Recebe todas as receitas do usuário.
+ *     responses:
+ *      200:
+ *       description: Receitas recebidas.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          properties:
+ *           id:
+ *            type: string
+ *            format: uuid
+ *            example: 8a109e53-9743-450a-9390-ff7537e34aa8
+ *           amount:
+ *            type: string
+ *            example: 1000 
+ */
 router.get('/income', isAuthentication, new incomeController().findAllIncome);
+/**
+ * @swagger
+ * /income/:month/:year:
+ *   get:
+ *     tags:
+ *      - Ganhos
+ *     summary: Recebe todas as receitas de acordo com o mes e ano.
+ *     description: Recebe todas as receitas do usuário de acordo com o mes e ano.
+ *     responses:
+ *      200:
+ *       description: Receitas recebidas.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: array
+ *          items:
+ *           $ref: '#/components/schemas/BalanceItem'
+ */
 router.get('/income/:month/:year', isAuthentication, new incomeController().findIncomeForMonth);
 
 router.post('/expense', isAuthentication, new ExpenseController().expenseMoney);
