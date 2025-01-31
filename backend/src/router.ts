@@ -194,7 +194,6 @@ router.get('/current/:month/:year', isAuthentication, new ReceiveMoneyController
  *          example: received success!
  */
 router.post('/income', isAuthentication, new incomeController().incomeMoney);
-
 /**
  * @swagger
  * /income:
@@ -240,6 +239,80 @@ router.get('/income', isAuthentication, new incomeController().findAllIncome);
  */
 router.get('/income/:month/:year', isAuthentication, new incomeController().findIncomeForMonth);
 
+/**
+ * @swagger
+ * /expense:
+ *   post:
+ *     tags:
+ *      - Gastos
+ *     summary: Insere um novo gasto.
+ *     description: Insere uma nova despesa
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: object
+ *         properties:
+ *          amount:
+ *           type: number
+ *           example: 1000
+ *           description: Valor da receita.
+ *          description:
+ *           type: string
+ *           example: Salario
+ *           description: Descrição da receita.
+ *     responses:
+ *      200:
+ *       description: Receita inserida com sucesso.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: string
+ *          example: expense success!
+ */
 router.post('/expense', isAuthentication, new ExpenseController().expenseMoney);
+/**
+ * @swagger
+ * /expense:
+ *   get:
+ *     tags:
+ *      - Gastos
+ *     summary: Retorna os gastos.
+ *     description: Recebe todas as despesas do usuário.
+ *     responses:
+ *      200:
+ *       description: Receitas recebidas.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          properties:
+ *           id:
+ *            type: string
+ *            format: uuid
+ *            example: 8a109e53-9743-450a-9390-ff7537e34aa8
+ *           amount:
+ *            type: string
+ *            example: 1000 
+ */
 router.get('/expense', isAuthentication, new ExpenseController().findAllExpense);
+/**
+ * @swagger
+ * /expense/:month/:year:
+ *   get:
+ *     tags:
+ *      - Gastos
+ *     summary: Recebe todas os gastos de acordo com o mes e ano.
+ *     description: Recebe todas os gastos do usuário de acordo com o mes e ano.
+ *     responses:
+ *      200:
+ *       description: Receitas recebidas.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: array
+ *          items:
+ *           $ref: '#/components/schemas/BalanceItem'
+ */
 router.get('/expense/:month/:year', isAuthentication, new ExpenseController().findEXpenseForMonth);
