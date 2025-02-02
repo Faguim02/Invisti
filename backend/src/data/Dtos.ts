@@ -33,3 +33,9 @@ export type UserDto = {
     date?: string,
     user_id?: string
   }
+
+  export type CDI = {
+    id?: string,
+    value: number | string,
+    date?: string
+  }
