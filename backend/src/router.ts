@@ -10,6 +10,55 @@ export const router = Router();
 
 /**
  * @swagger
+ * /calculator/final-money-for-month:
+ *   post:
+ *     tags:
+ *      - Calculadora Financeira
+ *     summary: Simula o valor final do investimento no m s.
+ *     description: Simula o valor final do investimento no m s com base nos dados fornecidos.
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: object
+ *         properties:
+ *          money:
+ *           type: number
+ *           example: 1000
+ *           description: Valor inicial do investimento.
+ *          interestRate:
+ *           type: number
+ *           example: 15
+ *           description: Taxa de juros do investimento.
+ *          time:
+ *           type: number
+ *           example: 12
+ *           description: Tempo do investimento em meses.
+ *     responses:
+ *      200:
+ *       description: Valor final do investimento no m s.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          properties:
+ *           finalMoney:
+ *            type: number
+ *            example: 1000
+ *            description: Valor final do investimento no m s.
+ *           valueBrute:
+ *            type: number
+ *            example: 1000
+ *            description: Valor bruto do investimento no m s.
+ *           invistedFull:
+ *            type: number
+ *            example: 1000
+ *            description: Valor total investido no m s.
+ */
+router.post('/calculator/final-money-for-month', new FinancialCalculatorController().simuleFinalMoneyForMonth);
+/**
+ * @swagger
  * /calculator/final-money:
  *   post:
  *     tags:

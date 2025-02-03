@@ -36,6 +36,23 @@ export default class FinancialCalculatorService {
         return finalMoney;
     }
 
+    public simuleFinalMoneyForMonth(money: number, interestRate: number, time: number): Record<string, number> {
+        
+        interestRate = (interestRate / 100) / 12;
+
+        const valueBrute = money * ((Math.pow(1 + (interestRate / 100), time) - 1) / (interestRate / 100)) * (1 + (interestRate / 100));
+
+        const invistedFull = time * money;
+
+        const finalMoney = valueBrute - this.calculeIR(time, valueBrute - invistedFull);
+        
+        return {
+            finalMoney: finalMoney,
+            valueBrute: valueBrute,
+            invistedFull: invistedFull
+        };
+    }
+
     private calculeIR(time: number, profit: number): number {
         if(time <= 6) {
             return 0.225 * profit;

@@ -37,4 +37,17 @@ export class FinancialCalculatorController {
 
         res.json(financialCalculatorServiceResponse);
     }
+
+    
+    async simuleFinalMoneyForMonth(req: Request, res: Response) {
+        const { money, interestRate, time } = req.body;
+
+        const financialCalculatorServiceResponse = await new FinancialCalculatorService().simuleFinalMoneyForMonth(
+            money,
+            interestRate,
+            time
+        );
+
+        res.json(financialCalculatorServiceResponse);
+    }
 }
