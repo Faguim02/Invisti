@@ -14,6 +14,7 @@ export default function Apresentation() {
                 <section>
                     <h2>Saiba para onde seu dinheiro está correndo</h2>
                     <Button onClick={()=>navigate('/signUp')}>Criar uma conta</Button>
+                    <Button onClick={()=>navigate('/calculator')}>Simular investimentos</Button>
                 </section>
             </figure>
 
