@@ -1,0 +1,22 @@
+.range {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 10px;
+    color: #CACACA;
+    font-weight: bold;
+    width: 100%;
+    gap: 1rem;
+}
+
+.rangeLabel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+input[type=range] {
+    accent-color: #8332AC;
+}
