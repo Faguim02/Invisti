@@ -28,4 +28,28 @@ export class CalculatorService {
             }
         }
     }
+
+    async monthlyContribution(data: Record<string, number>) {
+        try {
+            
+            return (await api.post('/calculator/monthly-contribution', data)).data;
+
+        } catch (error) {
+            return {
+                message: "erro"
+            }
+        }
+    }
+
+    async timeInvistment(data: Record<string, number>) {
+        try {
+            
+            return (await api.post('/calculator/time-invested', data)).data;
+
+        } catch (error) {
+            return {
+                message: "erro"
+            }
+        }
+    }
 }
