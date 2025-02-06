@@ -18,13 +18,11 @@ export default function CalculatorPage() {
     const [valueMonth, setValueMonth] = useState<number>(0);
     const [tax, setTax] = useState<number>(0);
 
-    const [finalValue, setFinalValue] = useState<number>(0);
-    const [finalTime, setFinalTime] = useState<number>(0);
-    const [finalMonth, setFinalMonth] = useState<number>(0);
-
-    const [finalValueMonth, setFinalValueMonth] = useState<number>(0);
+    const [objective, setObjective] = useState<number>(10000);
 
     const [finalMoney, setFinalMoney] = useState<Record<string, number>>({});
+    const [finalMoneyMonth, setFinalMoneyMonth] = useState<number>(0);
+    const [finalTime, setFinalTime] = useState<number>(0);
 
     const formatMoney = new FormatMoneyService();
 
@@ -52,10 +50,33 @@ export default function CalculatorPage() {
 
     }
 
+    async function handleSubmitMonthlyContribution(e: any) {
+        e.preventDefault();
+
+        const res = await new CalculatorService().monthlyContribution({
+            valueFuture: objective,
+            interestRate: tax,
+            time: time
+        });
+
+        setFinalMoneyMonth(res as number);
+    }
+
+    async function handleSubmitTime(e: any) {
+        e.preventDefault();
+
+        const res = await new CalculatorService().timeInvistment({
+            valueFuture: objective,
+            interestRate: tax,
+            moneyMonth: valueMonth
+        });
+
+        setFinalTime(res as number);
+    }
+
     return (
         <>
             <HeaderComponent/>
-            <p>{formatMoney.formatMoney(123456.1)}</p>
             <div className={style.container}>
 
                 {page === 0 && (
@@ -94,12 +115,16 @@ export default function CalculatorPage() {
                             <h1>Saber quanto investir</h1>
                         </div>
 
-                        <form className={style.form}>
-                            <InputLabel labeText="Objetivo" pleaceholder="R$ 10000" value="" type="number" required onChange={() => {}}/>
-                            <InputLabel labeText="Taxa juros" pleaceholder="12%" value="" type="number" required onChange={() => {}}/>
+                        <form className={style.form} onSubmit={handleSubmitMonthlyContribution}>
+                            <InputLabel labeText="Objetivo" pleaceholder="R$ 10000" value={objective.toString()} type="number" required onChange={() => {}}/>
+                            <InputLabel labeText="Taxa juros" pleaceholder="12%" value={tax.toString()} type="number" required onChange={(e) => {setTax(e.target.value)}}/>
                             <Range label="Tempo de investimento" value={time} onChange={(e) => {setTime(e.target.value)}} min={1} max={120} step={1}/>
                             <Button style={{width: '100%'}}>Simular</Button>
                         </form>
+
+                        <div>
+                            {(finalMoneyMonth != 0) && <h2>Será necessario um investimento de: R$ {formatMoney.formatMoney(Number(finalMoneyMonth))}</h2>}
+                        </div>
                     </>
                 )}
 
@@ -110,53 +135,60 @@ export default function CalculatorPage() {
                             <h1>Tempo de investimento</h1>
                         </div>
 
-                        <form className={style.form}>
-                            <InputLabel labeText="Objetivo" pleaceholder="R$ 10000" value="" type="number" required onChange={() => {}}/>
-                            <InputLabel labeText="INvestimento mensal" pleaceholder="R$ 10000" value="" type="number" required onChange={() => {}}/>
-                            <InputLabel labeText="Taxa juros" pleaceholder="12%" value="" type="number" required onChange={() => {}}/>
+                        <form className={style.form} onSubmit={handleSubmitTime}>
+                            <InputLabel labeText="Objetivo" pleaceholder="R$ 10000" value={objective.toString()} type="number" required onChange={(e) => {setObjective(e.target.value)}}/>
+                            <InputLabel labeText="INvestimento mensal" pleaceholder="R$ 10000" value={valueMonth.toString()} type="number" required onChange={(e) => {setValueMonth(e.target.value)}}/>
+                            <InputLabel labeText="Taxa juros" pleaceholder="12%" value={tax.toString()} type="number" required onChange={(e) => {setTax(e.target.value)}}/>
                             <Button style={{width: '100%'}}>Simular</Button>
                         </form>
+
+                        {(finalTime != 0) && <h2>Levara {finalTime} meses para chegar ao seu objetivo</h2>}
                     </>
                 )}
 
                 {page === 4 && (
                     <>
-                        <h2>Investimento</h2>
+                        <section className={style.resultLabel}>
+                            <IoMdArrowRoundBack onClick={() => setPage(0)} size={30} color='#444444' cursor={'pointer'}/>
+                            <h2>Investimento</h2>
+                        </section>
                         <article className={style.resultInvistment}>
                             <section>
                                 <p>Valor investido:</p>
-                                <span>R$ {Number(finalValue).toFixed(2)}</span>
+                                <span>R$ {formatMoney.formatMoney(Number(valueFull))}</span>
                             </section>
                             <section>
-                                <p>Valor investido mensalmente:</p>
-                                <span>R$ {Number(finalMonth).toFixed(2)}</span>
+                                <p>Investido mensal:</p>
+                                <span>R$ {formatMoney.formatMoney(Number(valueMonth))}</span>
                             </section>
                             <section>
-                                <p>Tempo investido:</p>
-                                <span>{finalTime} meses</span>
+                                <p>Tempo:</p>
+                                <span>{time} meses</span>
                             </section>
                             <section>
                                 <p>Taxa de juros:</p>
                                 <span>{tax} %</span>
                             </section>
                         </article>
-                        <h2>Resultado</h2>
+                        <section className={style.resultLabel}>
+                            <h2>Resultado</h2>
+                        </section>
                         <article className={style.resultInvistment}>
                             <section>
                                 <p>Valor investido</p>
-                                <span>R$ {Number(finalMoney?.invistedFull).toFixed(2)}</span>
+                                <span>R$ {formatMoney.formatMoney(Number(finalMoney?.invistedFull))}</span>
                             </section>
                             <section>
                                 <p>Valor bruto</p>
-                                <span>R$ {Number(finalMoney?.valueBrute).toFixed(2)}</span>
+                                <span>R$ {formatMoney.formatMoney(Number(finalMoney?.valueBrute))}</span>
                             </section>
                             <section>
                                 <p>Valor real</p>
-                                <span>R$ {Number(finalMoney?.finalMoney).toFixed(2)}</span>
+                                <span>R$ {formatMoney.formatMoney(Number(finalMoney?.finalMoney))}</span>
                             </section>
                             <section>
                                 <p>Lucro</p>
-                                <span>R$ {Number(finalMoney?.profit).toFixed(2)}</span>
+                                <span>R$ {formatMoney.formatMoney(Number(finalMoney?.profit))}</span>
                             </section>
                         </article>
                     
