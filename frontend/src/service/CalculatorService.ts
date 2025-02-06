@@ -4,7 +4,7 @@ export class CalculatorService {
     async finalMoney(data: Record<string, number>) {
         try {
             
-            const res = await api.post('/calculator/final-money-for-month', data);
+            const res = await api.post('/calculator/final-money', data);
 
             return res.data;
 
@@ -18,7 +18,7 @@ export class CalculatorService {
     async finalMoneyMonth(data: Record<string, number>) {
         try {
             
-            const res = await api.post('/calculator/final-money', data);
+            const res = await api.post('/calculator/final-money-for-month', data);
 
             return res.data;
 
