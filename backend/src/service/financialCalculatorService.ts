@@ -11,9 +11,9 @@ export default class FinancialCalculatorService {
     public calculateTimeInvested(valueFuture: number, moneyMonth: number, interestRate: number) {
         interestRate = (interestRate / 100) / 12;
 
-        const valueBrute = valueFuture + this.calculeIR(12, valueFuture);
+        const valueBrute = valueFuture;
 
-        const time = Math.log((valueFuture * interestRate / moneyMonth) + 1) / Math.log(1 + interestRate);
+        const time = Math.log((valueBrute * interestRate / moneyMonth) + 1) / Math.log(1 + interestRate);
 
         return Math.ceil(time);
     }
@@ -28,19 +28,24 @@ export default class FinancialCalculatorService {
         return Number(monthlyContribution.toFixed(2));
     }
 
-    public simulateFinalMoney(money: number, interestRate: number, time: number): number {
+    public simulateFinalMoney(money: number, interestRate: number, time: number): Record<string, number> {
         
         const finalMoneyBrute: number = money * Math.pow(1 + (interestRate / 100), (time / 12));
         const finalMoney = finalMoneyBrute - this.calculeIR(time, finalMoneyBrute - money);
         
-        return finalMoney;
+        return {
+            finalMoney: finalMoney,
+            valueBrute: finalMoneyBrute,
+            invistedFull: money,
+            profit: finalMoney - money
+        };
     }
 
     public simuleFinalMoneyForMonth(money: number, interestRate: number, time: number): Record<string, number> {
         
         interestRate = (interestRate / 100) / 12;
 
-        const valueBrute = money * ((Math.pow(1 + (interestRate / 100), time) - 1) / (interestRate / 100)) * (1 + (interestRate / 100));
+        const valueBrute = money * ((Math.pow(1 + interestRate, time) - 1) / interestRate) * (1 + interestRate);
 
         const invistedFull = time * money;
 
@@ -49,7 +54,8 @@ export default class FinancialCalculatorService {
         return {
             finalMoney: finalMoney,
             valueBrute: valueBrute,
-            invistedFull: invistedFull
+            invistedFull: invistedFull,
+            profit: finalMoney - invistedFull
         };
     }
 
