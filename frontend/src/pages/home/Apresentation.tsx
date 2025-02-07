@@ -3,6 +3,8 @@ import people from '../../assets/people.jpg'
 import cell from '../../assets/cell.svg'
 import style from './style.module.css'
 import { useNavigate } from 'react-router-dom'
+import bg_logo from '../../assets/INVIST.png'
+import FooterComponent from '../../components/footer/FooterComponent'
 
 export default function Apresentation() {
 
@@ -11,9 +13,11 @@ export default function Apresentation() {
     return (
         <>
             <figure className={style.bgApresentation}>
-                <section>
-                    <h2>Saiba para onde seu dinheiro está correndo</h2>
-                    <Button onClick={()=>navigate('/signUp')}>Criar uma conta</Button>
+                <img src={bg_logo} alt="bg" />
+                <p>Controle seu dinheiro e tenha visão de onde e como investir</p>
+                <section className={style.buttons}>
+                    <button className={`${style.button} ${style.primary}`} onClick={() => navigate('/signUp')}>Cadastrar</button>
+                    <button className={`${style.button} ${style.secondary}`} onClick={() => navigate('/calculator')}>Simalar investimento</button>
                 </section>
             </figure>
 
@@ -48,6 +52,8 @@ export default function Apresentation() {
                     <Button>Download Apk</Button>
                 </article>
             </section>
+
+            <FooterComponent/>
         </>
     )
 }

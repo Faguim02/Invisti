@@ -8,7 +8,7 @@ interface CardProps {
     date: string
 }
 
-export default function Card({type, description, amount, date}:CardProps) {
+export default function Card({description, amount, date}:CardProps) {
     return (
         <li>
             <div className={style.icon}>

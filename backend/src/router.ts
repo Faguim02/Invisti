@@ -4,8 +4,170 @@ import { ReceiveMoneyController } from "./controller/ReceiveMoneyController";
 import { isAuthentication } from "./middlewares/isAuthentication";
 import { incomeController } from "./controller/IncomeController";
 import { ExpenseController } from "./controller/ExpenseController";
+import { FinancialCalculatorController } from "./controller/FinancialCalculatorController";
 
 export const router = Router();
+
+/**
+ * @swagger
+ * /calculator/final-money-for-month:
+ *   post:
+ *     tags:
+ *      - Calculadora Financeira
+ *     summary: Simula o valor final do investimento no m s.
+ *     description: Simula o valor final do investimento no m s com base nos dados fornecidos.
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: object
+ *         properties:
+ *          money:
+ *           type: number
+ *           example: 1000
+ *           description: Valor inicial do investimento.
+ *          interestRate:
+ *           type: number
+ *           example: 15
+ *           description: Taxa de juros do investimento.
+ *          time:
+ *           type: number
+ *           example: 12
+ *           description: Tempo do investimento em meses.
+ *     responses:
+ *      200:
+ *       description: Valor final do investimento no m s.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          properties:
+ *           finalMoney:
+ *            type: number
+ *            example: 1000
+ *            description: Valor final do investimento no m s.
+ *           valueBrute:
+ *            type: number
+ *            example: 1000
+ *            description: Valor bruto do investimento no m s.
+ *           invistedFull:
+ *            type: number
+ *            example: 1000
+ *            description: Valor total investido no m s.
+ */
+router.post('/calculator/final-money-for-month', new FinancialCalculatorController().simuleFinalMoneyForMonth);
+/**
+ * @swagger
+ * /calculator/final-money:
+ *   post:
+ *     tags:
+ *      - Calculadora Financeira
+ *     summary: Simula o valor final do investimento.
+ *     description: Simula o valor final do investimento com base nos dados fornecidos.
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: object
+ *         properties:
+ *          money:
+ *           type: number
+ *           example: 1000
+ *           description: Valor inicial do investimento.
+ *          interestRate:
+ *           type: number
+ *           example: 15
+ *           description: Taxa de juros do investimento.
+ *          time:
+ *           type: number
+ *           example: 12
+ *           description: Tempo do investimento em meses.
+ *     responses:
+ *      200:
+ *       description: Valor final do investimento.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: number
+ *          example: 1120
+ */
+router.post('/calculator/final-money', new FinancialCalculatorController().simulateFinalMoney);
+/**
+ * @swagger
+ * /calculator/monthly-contribution:
+ *   post:
+ *     tags:
+ *      - Calculadora Financeira
+ *     summary: Calcula a contribui o mensal necessária para atingir o objetivo.
+ *     description: Calcula a contribui o mensal necessária para atingir o objetivo com base nos dados fornecidos.
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: object
+ *         properties:
+ *          valueFuture:
+ *           type: number
+ *           example: 1000
+ *           description: Valor futuro do investimento.
+ *          interestRate:
+ *           type: number
+ *           example: 15
+ *           description: Taxa de juros do investimento.
+ *          time:
+ *           type: number
+ *           example: 12
+ *           description: Tempo do investimento em meses.
+ *     responses:
+ *      200:
+ *       description: Contribui o mensal necessária para atingir o objetivo.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: number
+ *          example: 93.31
+ */
+router.post('/calculator/monthly-contribution', new FinancialCalculatorController().calculateMonthlyContribution);
+/**
+ * @swagger
+ * /calculator/time-invested:
+ *   post:
+ *     tags:
+ *      - Calculadora Financeira
+ *     summary: Calcula o tempo necessário para atingir o objetivo.
+ *     description: Calcula o tempo necessário para atingir o objetivo com base nos dados fornecidos.
+ *     requestBody:
+ *      required: true
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: object
+ *         properties:
+ *          valueFuture:
+ *           type: number
+ *           example: 1000
+ *           description: Valor futuro do investimento.
+ *          moneyMonth:
+ *           type: number
+ *           example: 100
+ *           description: Valor mensal do investimento.
+ *          interestRate:
+ *           type: number
+ *           example: 15
+ *           description: Taxa de juros do investimento.
+ *     responses:
+ *      200:
+ *       description: Tempo necessário para atingir o objetivo.
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: number
+ *          example: 10
+ */
+router.post('/calculator/time-invested', new FinancialCalculatorController().calculateTimeInvested);
 
 /**
  * @swagger
