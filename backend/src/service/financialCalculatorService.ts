@@ -41,21 +41,29 @@ export default class FinancialCalculatorService {
         };
     }
 
-    public simuleFinalMoneyForMonth(money: number, interestRate: number, time: number): Record<string, number> {
-        
+    public simuleFinalMoneyForMonth(firstMoney: number, money: number, interestRate: number, time: number): Record<string, number> {
         interestRate = (interestRate / 100) / 12;
 
-        const valueBrute = money * ((Math.pow(1 + interestRate, time) - 1) / interestRate) * (1 + interestRate);
+        let valueBrute = money * ((Math.pow(1 + interestRate, time) - 1) / interestRate) * (1 + interestRate);
 
-        const invistedFull = time * money;
+        let invistedFull = time * money;
 
-        const finalMoney = valueBrute - this.calculeIR(time, valueBrute - invistedFull);
+        let finalMoney = valueBrute - this.calculeIR(time, valueBrute - invistedFull);
+
+        let profit = finalMoney - invistedFull;
+
+        if(firstMoney !== null || firstMoney !== undefined || firstMoney !== 0) {
+            finalMoney += Number(this.simulateFinalMoney(firstMoney, interestRate, time).finalMoney);
+            valueBrute += Number(this.simulateFinalMoney(firstMoney, interestRate, time).valueBrute);
+            invistedFull += Number(firstMoney);
+            profit += Number(this.simulateFinalMoney(firstMoney, interestRate, time).profit);
+        }
         
         return {
             finalMoney: finalMoney,
             valueBrute: valueBrute,
             invistedFull: invistedFull,
-            profit: finalMoney - invistedFull
+            profit: profit
         };
     }
 

@@ -40,9 +40,10 @@ export class FinancialCalculatorController {
 
     
     async simuleFinalMoneyForMonth(req: Request, res: Response) {
-        const { money, interestRate, time } = req.body;
+        const { firstMoney, money, interestRate, time } = req.body;
 
         const financialCalculatorServiceResponse = await new FinancialCalculatorService().simuleFinalMoneyForMonth(
+            firstMoney,
             money,
             interestRate,
             time
