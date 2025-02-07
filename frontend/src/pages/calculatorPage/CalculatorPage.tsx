@@ -39,7 +39,8 @@ export default function CalculatorPage() {
             setFinalMoney(res as Record<string, number>);
         } else {
             const res = await new CalculatorService().finalMoneyMonth({
-                money: Number(Number(valueMonth) + Number(valueFull)),
+                firstMoney: valueFull || 0,
+                money: valueMonth,
                 interestRate: tax,
                 time: time
             });
