@@ -15,6 +15,7 @@ import { ExpenseService } from "../../service/ExpenseService";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, useDisclosure } from "@chakra-ui/react";
 import InputLabel from "../../components/Input/InputLabel";
 import Card from "./Card";
+import { FormatMoneyService } from "../../service/FormatMoneyService";
 
 interface dataInitial {
     receive: ReceiveMoney,
@@ -38,6 +39,8 @@ export default function Home() {
     const [modayType, setModalType] = useState<string>("Receita")
     const { isOpen, onClose, onOpen } = useDisclosure()
 
+    const formatMoney = new FormatMoneyService()
+
     const { data } = useQuery({
         queryKey: ['money'],
         queryFn: LoadInfoInitial
@@ -45,7 +48,8 @@ export default function Home() {
 
     async function handleNextDate() {
         const dateNext = new DateSelectService().nextMonth(month, year)
-        const monthNumber = new DateSelectService().covertMonthTextInNumber(month)
+        const monthNumber = new DateSelectService().covertMonthTextInNumber(dateNext.month)
+        console.log(monthNumber, dateNext.year)
         if(!(new DateSelectService().isDateSelectedExist(monthNumber, dateNext.year))) {
             return
         }
@@ -73,6 +77,7 @@ export default function Home() {
         }
         
         setListHistoryForMonth(listHistory);
+        console.log(listHistory)
     }
 
     async function handleBackDate() {
@@ -192,22 +197,23 @@ export default function Home() {
 
             <section className={style.receiveContainer}>
                 <span>Valor atual</span>
-                <h3>R$ {Number(data?.receive.balance).toFixed(2)}</h3>
+                <h3>R$ {formatMoney.formatMoney(Number(data?.receive.balance))}</h3>
                 <div className={style.divider}></div>
             </section>
+
             <article className={style.statusGroup}>
                 <section className={style.statusContainer}>
                     <FaArrowUp color="#29BF12" size={40}/>
                     <div>
                         <span>receita do mês</span>
-                        <h4>R$ {Number(data?.income.amount).toFixed(2)}</h4>
+                        <h4>R$ {formatMoney.formatMoney(Number(data?.income.amount))}</h4>
                     </div>
                 </section>
                 <section className={style.statusContainer}>
                     <FaArrowDown color="#F21B3F" size={40}/>
                     <div>
                         <span>despesa do mês</span>
-                        <h4>R$ {Number(data?.expense.amount).toFixed(2)}</h4>
+                        <h4>R$ {formatMoney.formatMoney(Number(data?.expense.amount))}</h4>
                     </div>
                 </section>
             </article>
