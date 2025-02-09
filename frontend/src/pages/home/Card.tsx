@@ -24,7 +24,7 @@ export default function Card({description, amount, date, isNegative}:CardProps) 
                 </div>
             </div>
             <data className={style.date}>
-                {date}
+                {formatMoney.formatDate(date)}
             </data>
         </li>
     )
