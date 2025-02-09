@@ -15,6 +15,7 @@
     width: 100%;
     justify-content: center;
     gap: 20px;
+    padding: 1rem;
 }
 
 .card {
@@ -95,7 +96,8 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 1rem;
     align-items: center;
-    width: 60%;
+    width: 80%;
+    padding: 0 2rem;
 }
 
 .container .resultInvistment section {
@@ -126,5 +128,59 @@
     display: flex;
     gap: 1rem;
     justify-content: baseline;
-    width: 60%;
+    width: 80%;
+    padding: 0 2rem;
+}
+
+@media screen and (max-width: 768px) {
+    
+    .container h1 {
+        font-size: 22px;
+        padding: 2rem 1rem;
+    }
+    
+    .container .cardContainer {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container .resultInvistment {
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+    }
+    .container .resultLabel {
+        width: 100%;
+    }
+    .container .resultInvistment section p {
+        font-size: 12px;
+        font-weight: bold;
+        color: #444444;
+        text-align: center;
+    }
+    
+    .container .resultInvistment section span {
+        font-size: 16px;
+        font-weight: bold;
+        color: #444444;
+    }
+
+    .container .form {
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    .container .header {
+        width: 100%;
+        padding: 0 1rem;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .container .resultInvistment {
+        width: 100%;
+    }
+    .container .resultLabel {
+        width: 100%;
+    }
 }

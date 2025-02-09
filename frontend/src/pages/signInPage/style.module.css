@@ -31,5 +31,23 @@
 
 .backgroundContainerSignIn .logo {
     width: 100px;
-    
+}
+
+@media screen and (max-width: 768px) { 
+    .backgroundContainerSignIn {
+        flex-direction: column;
+        padding: 2rem;
+    }
+
+    .backgroundContainerSignIn form {
+        width: 100%;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .backgroundContainerSignIn .bgContainer {
+        border-radius: 8px 8px 0 0;
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
 }

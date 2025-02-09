@@ -87,3 +87,27 @@
     align-items: center;
 }
 
+@media screen and (max-width: 768px) {
+    .FooterComponent p, a, li {
+        font-size: small;
+    }
+
+    .FooterComponent .container {
+        flex-direction: column;
+    }
+
+    .FooterComponent .container .containerContact {
+        align-items: center;
+        width: 100%;
+    }
+
+    .FooterComponent .container .containerContact form {
+        width: 100%;
+    }
+
+    .FooterComponent .copyright {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem
+    }
+}

@@ -35,3 +35,14 @@
 .HeaderComponent button:active {
     background-color: #c9c8c8;
 }
+
+@media screen and (max-width: 768px) {
+    .HeaderComponent img {
+        width: 100px;
+    }
+
+    .HeaderComponent button {
+        font-size: small;
+        padding: 0.25rem 0.5rem;
+    }
+}
