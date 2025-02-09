@@ -92,7 +92,7 @@ export class ExpenseService {
             const startDate = new Date(`${year}-${month}-01`);
             const endDate = new Date(`${year}-${month}-30`);
 
-            const money = await prisma.expense.findMany({
+            const listExpenseTransaction = await prisma.expense.findMany({
                 where: {
                     date: {
                         gte: startDate,
@@ -102,7 +102,12 @@ export class ExpenseService {
                 }
             })
 
-            return money;
+            const amountFull = listExpenseTransaction.reduce((full, item)=> full + Number(item.amount), 0)
+
+            return {
+                amountFull,
+                listExpenseTransaction
+            };
 
         } catch (error) {
             return error+"";

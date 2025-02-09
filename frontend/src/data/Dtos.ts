@@ -33,3 +33,25 @@ export type UserDto = {
     date?: string,
     user_id?: string
   }
+
+  
+  export type IncomeTransactionsForMonthDto = {
+    amountFull: number,
+    listIncomeTransaction: Income[]
+  }
+  
+  export type ReceiveMoneyTransactionsForMonthDto = {
+    amountFull: number,
+    listReceiveTransaction: ReceiveMoney[]
+  }
+  
+  export type ExpenseTransactionsForMonthDto = {
+    amountFull: number,
+    listExpenseTransaction: Expense[]
+  }
+
+  export type TransactionsForMonthDto = {
+    incomes?: IncomeTransactionsForMonthDto,
+    expenses?: ExpenseTransactionsForMonthDto,
+    receives?: ReceiveMoneyTransactionsForMonthDto
+  }

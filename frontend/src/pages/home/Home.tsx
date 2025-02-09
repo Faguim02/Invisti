@@ -9,12 +9,13 @@ import { DateSelectService } from "../../service/DateSelectService";
 import Cookies from "ts-cookies";
 import { ReceiveMoneyService } from "../../service/ReceiveMoneyService";
 import { useQuery } from "react-query";
-import { Expense, Income, ReceiveMoney } from "../../data/Dtos";
+import { Expense, ExpenseTransactionsForMonthDto, Income, IncomeTransactionsForMonthDto, ReceiveMoney, ReceiveMoneyTransactionsForMonthDto, TransactionsForMonthDto } from "../../data/Dtos";
 import { IncomeService } from "../../service/IncomeService";
 import { ExpenseService } from "../../service/ExpenseService";
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, useDisclosure } from "@chakra-ui/react";
 import InputLabel from "../../components/Input/InputLabel";
 import Card from "./Card";
+import { FormatMoneyService } from "../../service/FormatMoneyService";
 
 interface dataInitial {
     receive: ReceiveMoney,
@@ -24,7 +25,7 @@ interface dataInitial {
 
 export default function Home() {
 
-    const [listHistoryForMonth, setListHistoryForMonth] = useState<Array<Expense | Income>>([])
+    const [transactionsForMonth, setTransactionsForMonth] = useState<TransactionsForMonthDto>({} as TransactionsForMonthDto)
     const [selectTypeMonth, setSelectTypeMonth] = useState<string>("ganhos")
 
     const [amount, setAmount] = useState<number>(0);
@@ -38,41 +39,34 @@ export default function Home() {
     const [modayType, setModalType] = useState<string>("Receita")
     const { isOpen, onClose, onOpen } = useDisclosure()
 
-    const { data } = useQuery({
+    const formatMoney = new FormatMoneyService()
+
+    const { data, refetch } = useQuery({
         queryKey: ['money'],
         queryFn: LoadInfoInitial
     })
 
     async function handleNextDate() {
         const dateNext = new DateSelectService().nextMonth(month, year)
-        const monthNumber = new DateSelectService().covertMonthTextInNumber(month)
+        const monthNumber = new DateSelectService().covertMonthTextInNumber(dateNext.month)
+        
         if(!(new DateSelectService().isDateSelectedExist(monthNumber, dateNext.year))) {
             return
         }
         setMonth(dateNext.month)
         setYear(dateNext.year)
 
-        let listHistory = [];
+        let incomesRes = await new IncomeService().findIncomeForMonth(monthNumber, year) as IncomeTransactionsForMonthDto
+        let expensesRes = await new ExpenseService().findExpenseForMonth(monthNumber, year) as ExpenseTransactionsForMonthDto
+        let receivesRes = await new ReceiveMoneyService().findMoneyForMonth(monthNumber, year) as ReceiveMoneyTransactionsForMonthDto
 
-        if(selectTypeMonth == "ganhos") {
-            listHistory = await new IncomeService().findIncomeForMonth(monthNumber, year) as Income[]
-        } else if(selectTypeMonth == "despesas") {
-            listHistory = await new ExpenseService().findExpenseForMonth(monthNumber, year) as Expense[]
-        } else {
-            const res = await new ReceiveMoneyService().findMoneyForMonth(monthNumber, year) as ReceiveMoney[]
-            for(let i = 0; i <= res.length; i++) {
-                const newObject = {
-                    amount: res[i].balance,
-                    date: res[i].date,
-                    description: "alteração",
-                    id: res[i].id,
-                    user_id: res[i].user_id
-                } as Income
-                listHistory.push(newObject)
-            }
-        }
-        
-        setListHistoryForMonth(listHistory);
+        const transactionsForMonth = {
+            incomes: incomesRes,
+            expenses: expensesRes,
+            receives: receivesRes
+        } as TransactionsForMonthDto
+
+        setTransactionsForMonth(transactionsForMonth)
     }
 
     async function handleBackDate() {
@@ -80,34 +74,45 @@ export default function Home() {
         setMonth(dateNext.month)
         setYear(dateNext.year)
 
-        const monthNumber = new DateSelectService().covertMonthTextInNumber(month)
-        let listHistory = [];
+        const monthNumber = new DateSelectService().covertMonthTextInNumber(dateNext.month)
 
-        if(selectTypeMonth == "ganhos") {
-            listHistory = await new IncomeService().findIncomeForMonth(monthNumber, year) as Income[]
-        } else if(selectTypeMonth == "despesas") {
-            listHistory = await new ExpenseService().findExpenseForMonth(monthNumber, year) as Expense[]
-        } else {
-            const res = await new ReceiveMoneyService().findMoneyForMonth(monthNumber, year) as ReceiveMoney[]
-            for(let i = 0; i <= res.length; i++) {
-                const newObject = {
-                    amount: res[i].balance,
-                    date: res[i].date,
-                    description: "alteração",
-                    id: res[i].id,
-                    user_id: res[i].user_id
-                } as Income
-                listHistory.push(newObject)
-            }
-        }
+        let incomesRes = await new IncomeService().findIncomeForMonth(monthNumber, year) as IncomeTransactionsForMonthDto
+        let expensesRes = await new ExpenseService().findExpenseForMonth(monthNumber, year) as ExpenseTransactionsForMonthDto
+        let receivesRes = await new ReceiveMoneyService().findMoneyForMonth(monthNumber, year) as ReceiveMoneyTransactionsForMonthDto
 
-        setListHistoryForMonth(listHistory);
+        const transactionsForMonth = {
+            incomes: incomesRes,
+            expenses: expensesRes,
+            receives: receivesRes
+        } as TransactionsForMonthDto
+
+        setTransactionsForMonth(transactionsForMonth)
     }
 
     async function LoadInfoInitial(): Promise<dataInitial> {
         const findAllMoney = await new ReceiveMoneyService().findAllMoney();
         const findAllIncome = await new IncomeService().findAllIncome();
         const findAllExpense = await new ExpenseService().findAllExpense();
+
+        const year = new Date().getFullYear()
+        const monthNumber = new Date().getMonth() + 1
+
+        let incomesRes = await new IncomeService().findIncomeForMonth(monthNumber, year) as IncomeTransactionsForMonthDto
+        let expensesRes = await new ExpenseService().findExpenseForMonth(monthNumber, year) as ExpenseTransactionsForMonthDto
+        let receivesRes = await new ReceiveMoneyService().findMoneyForMonth(monthNumber, year) as ReceiveMoneyTransactionsForMonthDto
+
+        const transactionsForMonth = {
+            incomes: incomesRes,
+            expenses: expensesRes,
+            receives: receivesRes
+        } as TransactionsForMonthDto
+
+        setTransactionsForMonth(transactionsForMonth)
+
+        const month = new DateSelectService().covertMonthNumberInText(monthNumber);
+
+        setMonth(month)
+        setYear(year)
         
         return {
             expense: findAllExpense as Expense,
@@ -127,7 +132,11 @@ export default function Home() {
 
             const incoemeRes = await new IncomeService().incomeMoney(incomeData)
 
-            console.log(incoemeRes);
+            if(incoemeRes == "received success!") {
+                onClose()
+                refetch()
+            }
+
             return            
         }
 
@@ -138,7 +147,10 @@ export default function Home() {
 
         const expenseRes = await new ExpenseService().expenseMoney(expenseData)
 
-        console.log(expenseRes)
+        if(expenseRes == "expense success!") {
+            onClose()
+            refetch()
+        }
     }
 
     if(!Cookies.get('access_token')) {
@@ -188,26 +200,27 @@ export default function Home() {
                 </ModalContent>
             </Modal>
 
-            <HeaderComponent/>
+            <HeaderComponent isAuthenticated/>
 
             <section className={style.receiveContainer}>
                 <span>Valor atual</span>
-                <h3>R$ {Number(data?.receive.balance).toFixed(2)}</h3>
+                <h3>R$ {formatMoney.formatMoney(Number(data?.receive.balance))}</h3>
                 <div className={style.divider}></div>
             </section>
+
             <article className={style.statusGroup}>
                 <section className={style.statusContainer}>
                     <FaArrowUp color="#29BF12" size={40}/>
                     <div>
                         <span>receita do mês</span>
-                        <h4>R$ {Number(data?.income.amount).toFixed(2)}</h4>
+                        <h4>R$ {formatMoney.formatMoney(Number(data?.income.amount))}</h4>
                     </div>
                 </section>
                 <section className={style.statusContainer}>
                     <FaArrowDown color="#F21B3F" size={40}/>
                     <div>
                         <span>despesa do mês</span>
-                        <h4>R$ {Number(data?.expense.amount).toFixed(2)}</h4>
+                        <h4>R$ {formatMoney.formatMoney(Number(data?.expense.amount))}</h4>
                     </div>
                 </section>
             </article>
@@ -229,14 +242,16 @@ export default function Home() {
                     <h4>{selectTypeMonth}</h4>
                     <div>
                         <span>Total:</span>
-                        <h4>R$ 10</h4>
+                        {selectTypeMonth == "em mãos" && <h4>R$ {formatMoney.formatMoney(Number(transactionsForMonth?.receives?.amountFull))}</h4>}
+                        {selectTypeMonth == "ganhos" && <h4>R$ {formatMoney.formatMoney(Number(transactionsForMonth?.incomes?.amountFull))}</h4>}
+                        {selectTypeMonth == "despesas" && <h4>R$ {formatMoney.formatMoney(Number(transactionsForMonth?.expenses?.amountFull))}</h4>}
                     </div>
                 </section>
 
                 <ul className={style.listHistory}>
-                    {
-                        listHistoryForMonth.map(item => <Card amount={Number(item.amount)} date="20 jan 2024" description="test" type={selectTypeMonth}/>)
-                    }
+                    {selectTypeMonth == "em mãos" && transactionsForMonth?.receives?.listReceiveTransaction.map(item => <Card amount={Number(item.balance)} date={item.date || ""} description={""} type={selectTypeMonth}/>)}
+                    {selectTypeMonth == "despesas" && transactionsForMonth?.expenses?.listExpenseTransaction.map(item => <Card amount={Number(item.amount)} date={item.date || ""} description={item.description || ""} type={selectTypeMonth} isNegative/>)}
+                    {selectTypeMonth == "ganhos" && transactionsForMonth?.incomes?.listIncomeTransaction.map(item => <Card amount={Number(item.amount)} date={item.date || ""} description={item.description || ""} type={selectTypeMonth}/>)}
                 </ul>
             </article>
             

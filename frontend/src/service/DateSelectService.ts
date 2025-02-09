@@ -25,7 +25,7 @@ export class DateSelectService {
         return monthList.indexOf(month) + 1;
     }
 
-    private covertMonthNumberInText(month: number): string {
+    covertMonthNumberInText(month: number): string {
         const monthList = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
         return monthList[month - 1]
