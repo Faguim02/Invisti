@@ -1,6 +1,6 @@
 import HeaderComponent from "../../components/header/HeaderComponent";
 import style from './style.module.css'
-import { FaArrowDown, FaArrowUp, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaCalculator, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { MdAdd, MdOutlineClear } from "react-icons/md";
 import Apresentation from "./Apresentation";
 import { useState } from "react";
@@ -16,6 +16,8 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, useDiscl
 import InputLabel from "../../components/Input/InputLabel";
 import Card from "./Card";
 import { FormatMoneyService } from "../../service/FormatMoneyService";
+import FooterComponent from "../../components/footer/FooterComponent";
+import { useNavigate } from "react-router-dom";
 
 interface dataInitial {
     receive: ReceiveMoney,
@@ -40,6 +42,8 @@ export default function Home() {
     const { isOpen, onClose, onOpen } = useDisclosure()
 
     const formatMoney = new FormatMoneyService()
+
+    const navigate = useNavigate()
 
     const { data, refetch } = useQuery({
         queryKey: ['money'],
@@ -169,6 +173,10 @@ export default function Home() {
                 {buttonFloatActive && (
                     <>
                         <Button style={{backgroundColor: '#f3f3f3'}} onClick={()=>{
+                            navigate('/calculator')
+                        }}><FaCalculator size={30} color="#29BF12"/></Button>
+
+                        <Button style={{backgroundColor: '#f3f3f3'}} onClick={()=>{
                             onOpen()
                             setModalType("Receita")
                         }}><FaArrowUp size={30} color="#29BF12"/></Button>
@@ -254,6 +262,10 @@ export default function Home() {
                     {selectTypeMonth == "ganhos" && transactionsForMonth?.incomes?.listIncomeTransaction.map(item => <Card amount={Number(item.amount)} date={item.date || ""} description={item.description || ""} type={selectTypeMonth}/>)}
                 </ul>
             </article>
+
+            <br />
+
+            <FooterComponent/>
             
         </div>
     )

@@ -8,6 +8,7 @@ import Range from '../../components/range/Range';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { CalculatorService } from '../../service/CalculatorService';
 import { FormatMoneyService } from '../../service/FormatMoneyService';
+import FooterComponent from '../../components/footer/FooterComponent';
 
 export default function CalculatorPage() {
     
@@ -197,6 +198,8 @@ export default function CalculatorPage() {
                 )}
                 
             </div>
+
+            <FooterComponent/>
         </>
     )
 }
